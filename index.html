@@ -151,9 +151,8 @@
             document.getElementById('popup').style.display = 'none';
         }
 
-        const Groq = require('groq-sdk');
-        const groq = new Groq();
-        
+        const groq = new window.Groq();
+
         const chatContainer = document.getElementById('chatContainer');
         const userInput = document.getElementById('userInput');
 
