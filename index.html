@@ -140,6 +140,7 @@
         <button onclick="sendMessage()">Send</button>
     </div>
 
+    <script src="https://unpkg.com/groq-sdk"></script>
     <script>
         // Function to show the popup on page load
         window.onload = function() {
@@ -150,9 +151,9 @@
             document.getElementById('popup').style.display = 'none';
         }
 
-        const API_KEY = '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'; // Your API Key
-        const API_URL = 'https://api.groq.com/openai/v1/chat/completions'; // API Endpoint
-
+        const Groq = require('groq-sdk');
+        const groq = new Groq();
+        
         const chatContainer = document.getElementById('chatContainer');
         const userInput = document.getElementById('userInput');
 
@@ -168,32 +169,22 @@
             appendMessage(userMessage, 'user');
 
             const requestBody = {
-                model: 'llama3-8b-8192',
                 messages: [{ role: 'user', content: userMessage }],
+                model: 'llama-3.3-70b-versatile',
                 temperature: 1,
                 max_tokens: 1024,
                 top_p: 1,
-                stream: false,
+                stream: true,
+                stop: null
             };
 
             try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${API_KEY}`,
-                    },
-                    body: JSON.stringify(requestBody),
-                });
+                const chatCompletion = await groq.chat.completions.create(requestBody);
 
-                if (!response.ok) {
-                    throw new Error(`Error: ${response.statusText}`);
+                for await (const chunk of chatCompletion) {
+                    const aiMessage = chunk.choices[0]?.delta?.content || '';
+                    appendMessage(aiMessage, 'ai');
                 }
-
-                const data = await response.json();
-                const aiMessage =
-                    data?.choices?.[0]?.message?.content || 'No response from AI';
-                appendMessage(aiMessage, 'ai');
             } catch (error) {
                 console.error('API request failed:', error);
                 appendMessage(`Error: ${error.message}`, 'ai');
