@@ -173,17 +173,15 @@
                 temperature: 1,
                 max_tokens: 1024,
                 top_p: 1,
-                stream: true,
+                stream: false,
                 stop: null
             };
 
             try {
                 const chatCompletion = await groq.chat.completions.create(requestBody);
 
-                for await (const chunk of chatCompletion) {
-                    const aiMessage = chunk.choices[0]?.delta?.content || '';
-                    appendMessage(aiMessage, 'ai');
-                }
+                const aiMessage = chatCompletion.choices[0]?.message?.content || '';
+                appendMessage(aiMessage, 'ai');
             } catch (error) {
                 console.error('API request failed:', error);
                 appendMessage(`Error: ${error.message}`, 'ai');
