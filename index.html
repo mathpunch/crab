@@ -140,7 +140,7 @@
         <button onclick="sendMessage()">Send</button>
     </div>
 
-    <script src="https://unpkg.com/groq-sdk"></script>
+    <script src="https://unpkg.com/@huggingface/inference"></script>
     <script>
         // Function to show the popup on page load
         window.onload = function() {
@@ -151,7 +151,7 @@
             document.getElementById('popup').style.display = 'none';
         }
 
-        const groq = new window.Groq({ apiKey: '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' });
+        const client = new HfInference("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");
 
         const chatContainer = document.getElementById('chatContainer');
         const userInput = document.getElementById('userInput');
@@ -167,20 +167,14 @@
             // Display user message
             appendMessage(userMessage, 'user');
 
-            const requestBody = {
-                messages: [{ role: 'user', content: userMessage }],
-                model: 'llama-3.3-70b-versatile',
-                temperature: 1,
-                max_tokens: 1024,
-                top_p: 1,
-                stream: false,
-                stop: null
-            };
-
             try {
-                const chatCompletion = await groq.chat.completions.create(requestBody);
+                const chatCompletion = await client.chatCompletion({
+                    model: "meta-llama/Meta-Llama-3-70B-Instruct",
+                    messages: [{ role: "user", content: userMessage }],
+                    max_tokens: 500
+                });
 
-                const aiMessage = chatCompletion.choices[0]?.message?.content || '';
+                const aiMessage = chatCompletion.choices[0]?.message || '';
                 appendMessage(aiMessage, 'ai');
             } catch (error) {
                 console.error('API request failed:', error);
