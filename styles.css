@@ -1,0 +1,26 @@
+body {
+    background-color: #000;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    background-image: url('https://example.com/stars-background.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+header {
+    text-align: center;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.movie-list {
+    margin: 20px auto;
+    max-width: 800px;
+}
+
+.movie {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+}
